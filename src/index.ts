@@ -8,13 +8,14 @@ const server = Bun.serve({
         switch(req.method) {
             case 'GET':
                 switch(url[0]) {
+                    // undefined is the result of '/'
                     case undefined:
                         // Check auth, return index.html or login.html
                         return new Response('Hello World!')
                     case 'alarm':
                         return new Response('Hello World!')
                     case 'audio':
-                        // Check auth, check url[1] for action, return list of audio ids or single audio
+                        // Check url[1] for id, return list of audio ids or single audio
                         return new Response('Hello World!')
                     default:
                         // Static files or 404
@@ -22,8 +23,17 @@ const server = Bun.serve({
                 }
             case 'POST':
                 switch(url[0]) {
+                    case 'alarm':
+                        // Set off the alarm
+                        return new Response('Hello World!')
                     case 'audio':
                         // Upload new audio
+                        return new Response('Hello World!')
+                    case 'login':
+                        // Attempt login
+                        return new Response('Hello World!')
+                    case 'logout':
+                        // Invalidate session token
                         return new Response('Hello World!')
                     default:
                         // Static files or 404
@@ -33,6 +43,9 @@ const server = Bun.serve({
                 if(isNaN(parseInt(url[1])))
                     return new Response('Missing id to DELETE', { status: 400 })
                 switch(url[0]) {
+                    case 'alarm':
+                        // Turn off the alarm
+                        return new Response('Hello World!')
                     case 'audio':
                         // Delete audio from url[1]
                         return new Response('Hello World!')
