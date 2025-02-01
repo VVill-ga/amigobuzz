@@ -80,7 +80,7 @@
         "/alarm": {
             "get": {
                 "description": "Get the alarm status",
-                "security": [{"BearerAuth": ["token"]}],
+                "security": [{"bearerAuth": ["token"]}],
                 "responses": {
                     "200": {
                         "description": "OK"
@@ -93,7 +93,7 @@
             },
             "post": {
                 "description": "Set off the alarm",
-                "security": [{"BearerAuth": ["token"]}],
+                "security": [{"bearerAuth": ["token"]}],
                 "responses": {
                     "200": {
                         "description": "OK"
@@ -109,7 +109,7 @@
             },
             "delete": {
                 "description": "Turn off the alarm",
-                "security": [{"BearerAuth": ["token"]}],
+                "security": [{"bearerAuth": ["token"]}],
                 "responses": {
                     "200": {
                         "description": "OK"
@@ -125,7 +125,7 @@
             },
             "patch": {
                 "description": "Change the alarm volume",
-                "security": [{"BearerAuth": ["token"]}],
+                "security": [{"bearerAuth": ["token"]}],
                 "parameters": [],
                 "responses": {
                     "200": {
@@ -144,7 +144,7 @@
         "/audio": {
             "get": {
                 "description": "Get the list of available audios",
-                "security": [{"BearerAuth": ["token"]}],
+                "security": [{"bearerAuth": ["token"]}],
                 "responses": {
                     "200": {
                         "description": "OK"
@@ -157,7 +157,7 @@
             },
             "post": {
                 "description": "Upload a new audio",
-                "security": [{"BearerAuth": ["token"]}],
+                "security": [{"bearerAuth": ["token"]}],
                 "parameters": [],
                 "responses": {
                     "200": {
@@ -176,34 +176,69 @@
         "/audios/{id}": {
             "get": {
                 "description": "Get an audio option",
-                "security": [{"BearerAuth": ["token"]}],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "number"
+                        }
+                    }
+                ],
+                "security": [{"bearerAuth": ["token"]}],
                 "responses": {
                     "200": {
                         "description": "OK"
                     },
                     "401": {
                         "description": "Not logged in"
+                    },
+                    "404": {
+                        "description": "Id not found"
                     }
                 },
                 "tags": ["Audio"]
             },
             "delete": {
                 "description": "Delete an audio option",
-                "security": [{"BearerAuth": ["token"]}],
+                "security": [{"bearerAuth": ["token"]}],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "number"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK"
                     },
                     "401": {
                         "description": "Not logged in"
+                    },
+                    "404": {
+                        "description": "Id not found"
                     }
                 },
                 "tags": ["Audio"]
             },
             "patch": {
                 "description": "Update an audio option",
-                "security": [{"BearerAuth": ["token"]}],
-                "parameters": [],
+                "security": [{"bearerAuth": ["token"]}],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "number"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK"
@@ -213,6 +248,9 @@
                     },
                     "401": {
                         "description": "Not logged in"
+                    },
+                    "404": {
+                        "description": "Id not found"
                     }
                 },
                 "tags": ["Audio"]
