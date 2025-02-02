@@ -2,7 +2,14 @@
 It plays sounds from a speaker.
 
 ## Tech Stack
-- Bun (node.js alt)
+- [Bun](https://bun.sh)
 - Typescript
 
-Run: `bun run index.ts`
+## Running
+```sh
+bun run host
+```
+
+## Server
+- Static files hosted from `/public`
+- API routes handled as described in `/apischema.json`
