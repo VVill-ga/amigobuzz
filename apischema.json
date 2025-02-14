@@ -1,0 +1,618 @@
+{
+    "openapi":"3.0.3",
+    "info": {
+      "title":"Amigobuzz",
+      "version":"1.0"
+    },
+    "servers": [
+      {"url":"https://buzz.vvill.dev"},
+      {"url":"https://buzz.snakej.org"}
+    ],
+    "paths": {
+        "/": {
+            "get": {
+                "description": "If auth'd, returns home page. Otherwise, returns login page.",
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                },
+                "tags": ["HTML"]
+            }
+        },
+        "/login": {
+            "post": {
+                "description": "Attempt login, returns session token",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "username": {
+                                        "type": "string",
+                                        "example": "SnakeJ419"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "********"
+                                    },
+                                    "otp": {
+                                        "type": "string",
+                                        "example": "634953"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "Missing field(s)"
+                    },
+                    "401": {
+                        "description": "Invalid credentials"
+                    }
+                },
+                "tags": ["Auth"]
+            }
+        },
+        "/logout": {
+            "post": {
+                "description": "Removes the user's session token from memory",
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "Missing session token"
+                    }
+                },
+                "tags": ["Auth"]
+            }
+        },
+        "/buzz": {
+            "get": {
+                "description": "Get the alarm status",
+                "security": [{"bearerAuth": ["token"]}],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "on": {
+                                            "type": "boolean"
+                                        },
+                                        "volume": {
+                                            "type": "number"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Not logged in"
+                    }
+                },
+                "tags": ["Buzz"]
+            },
+            "post": {
+                "description": "Turn on the alarm",
+                "security": [{"bearerAuth": ["token"]}],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "208": {
+                        "description": "Alarm already on"
+                    },
+                    "401": {
+                        "description": "Not logged in"
+                    }
+                },
+                "tags": ["Buzz"]
+            },
+            "delete": {
+                "description": "Turn off the alarm",
+                "security": [{"bearerAuth": ["token"]}],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "208": {
+                        "description": "Alarm already off"
+                    },
+                    "401": {
+                        "description": "Not logged in"
+                    }
+                },
+                "tags": ["Buzz"]
+            },
+            "patch": {
+                "description": "Change the alarm volume",
+                "security": [{"bearerAuth": ["token"]}],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "volume": {
+                                        "type": "number"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "208": {
+                        "description": "Volume already at this level"
+                    },
+                    "400": {
+                        "description": "No volume specified"
+                    },
+                    "401": {
+                        "description": "Not logged in"
+                    }
+                },
+                "tags": ["Buzz"]
+            }
+        },
+        "/alarm": {
+            "get": {
+                "description": "Get all alarms",
+                "security": [{"bearerAuth": ["token"]}],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "id": {
+                                                "type": "number"
+                                            },
+                                            "name": {
+                                                "type": "string",
+                                                "example": "Barb's Bookstore"
+                                            },
+                                            "audioId": {
+                                                "type": "number"
+                                            },
+                                            "time": {
+                                                "type": "number"
+                                            },
+                                            "volume": {
+                                                "type": "number"
+                                            },
+                                            "repeat": {
+                                                "type": "string",
+                                                "example": "2w"
+                                            },
+                                            "enabled": {
+                                                "type": "boolean"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Not logged in"
+                    }
+                },
+                "tags": ["Alarm"]
+            },
+            "post": {
+                "description": "Create a new alarm",
+                "security": [{"bearerAuth": ["token"]}],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Barb's Bookstore"
+                                    },
+                                    "audioId": {
+                                        "type": "number"
+                                    },
+                                    "time": {
+                                        "type": "number"
+                                    },
+                                    "volume": {
+                                        "type": "number"
+                                    },
+                                    "repeat": {
+                                        "type": "string",
+                                        "example": "2w"
+                                    },
+                                    "enabled": {
+                                        "type": "boolean"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Created"
+                    },
+                    "400": {
+                        "description": "Missing or invalid field(s)"
+                    },
+                    "401": {
+                        "description": "Not logged in"
+                    }
+                },
+                "tags": ["Alarm"]
+            }
+        },
+        "/alarm/{id}": {
+            "get": {
+                "description": "Get an alarm",
+                "security": [{"bearerAuth": ["token"]}],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "number"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": {
+                                            "type": "number"
+                                        },
+                                        "name": {
+                                            "type": "string",
+                                            "example": "Barb's Bookstore"
+                                        },
+                                        "audioId": {
+                                            "type": "number"
+                                        },
+                                        "time": {
+                                            "type": "number"
+                                        },
+                                        "volume": {
+                                            "type": "number"
+                                        },
+                                        "repeat": {
+                                            "type": "string",
+                                            "example": "2w"
+                                        },
+                                        "enabled": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Not logged in"
+                    },
+                    "404": {
+                        "description": "Id not found"
+                    }
+                },
+                "tags": ["Alarm"]
+            },
+            "delete": {
+                "description": "Delete an alarm",
+                "security": [{"bearerAuth": ["token"]}],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "number"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "Missing id field"
+                    },
+                    "401": {
+                        "description": "Not logged in"
+                    },
+                    "404": {
+                        "description": "Id not found"
+                    }
+                },
+                "tags": ["Alarm"]
+            },
+            "patch": {
+                "description": "Update an alarm",
+                "security": [{"bearerAuth": ["token"]}],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "number"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "audioId": {
+                                        "type": "number"
+                                    },
+                                    "time": {
+                                        "type": "number"
+                                    },
+                                    "volume": {
+                                        "type": "number"
+                                    },
+                                    "repeat": {
+                                        "type": "string"
+                                    },
+                                    "enabled": {
+                                        "type": "boolean"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "208": {
+                        "description": "No Changes"
+                    },
+                    "401": {
+                        "description": "Not logged in"
+                    },
+                    "404": {
+                        "description": "Id not found"
+                    }
+                },
+                "tags": ["Alarm"]
+            }
+        },
+        "/audio": {
+            "get": {
+                "description": "Get the list of available audios ids",
+                "security": [{"bearerAuth": ["token"]}],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "id": {
+                                                "type": "number"
+                                            },
+                                            "name": {
+                                                "type": "string",
+                                                "example": "airhorn.wav"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Not logged in"
+                    }
+                },
+                "tags": ["Audio"]
+            },
+            "post": {
+                "description": "Upload a new audio",
+                "security": [{"bearerAuth": ["token"]}],
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "audio": {
+                                        "type": "string",
+                                        "format": "binary"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "Missing audio file"
+                    },
+                    "401": {
+                        "description": "Not logged in"
+                    },
+                    "409": {
+                        "description": "Audio name already in use"
+                    }
+                },
+                "tags": ["Audio"]
+            }
+        },
+        "/audios/{id}": {
+            "get": {
+                "description": "Get an audio option",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "number"
+                        }
+                    }
+                ],
+                "security": [{"bearerAuth": ["token"]}],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": {
+                                            "type": "number"
+                                        },
+                                        "name": {
+                                            "type": "string",
+                                            "example": "airhorn.wav"
+                                        },
+                                        "audio": {
+                                            "type": "string",
+                                            "format": "binary",
+                                            "example": "data:audio/wav;base64,...."
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Not logged in"
+                    },
+                    "404": {
+                        "description": "Id not found"
+                    }
+                },
+                "tags": ["Audio"]
+            },
+            "delete": {
+                "description": "Delete an audio option",
+                "security": [{"bearerAuth": ["token"]}],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "number"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "401": {
+                        "description": "Not logged in"
+                    },
+                    "404": {
+                        "description": "Id not found"
+                    }
+                },
+                "tags": ["Audio"]
+            },
+            "patch": {
+                "description": "Update an audio option",
+                "security": [{"bearerAuth": ["token"]}],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "number"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "audio": {
+                                        "type": "string",
+                                        "format": "binary"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "208": {
+                        "description": "No Changes"
+                    },
+                    "401": {
+                        "description": "Not logged in"
+                    },
+                    "404": {
+                        "description": "Id not found"
+                    }
+                },
+                "tags": ["Audio"]
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "scheme": "bearer"
+            }
+        }
+    }
+  }
